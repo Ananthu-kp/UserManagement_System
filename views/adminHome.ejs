@@ -1,0 +1,64 @@
+
+<%- include("header.ejs") %>
+
+<div class="container mt-5">
+    <h2 class="mb-4">Admin Home</h2>
+
+    <!-- Welcome Message -->
+    <p>Welcome, <%= admin.email %>!</p>
+
+    <!-- Search Bar -->
+    <form class="mb-4">
+        <div class="input-group">
+            <input type="text" class="form-control" placeholder="Search users..." name="search" />
+            <button type="submit" class="btn btn-outline-secondary">Search</button>
+        </div>
+    </form>
+    
+    <!-- User List -->
+    <h3 class="mb-3">User List</h3>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% if (Array.isArray(users) && users.length > 0) { %>
+                <% users.forEach(user => { %>
+                    <tr>
+                        <td><%= user._id %></td>
+                        <td><%= user.name %></td>
+                        <td><%= user.email %></td>
+                        <td><%= user.isBlocked ? 'Blocked' : 'Active' %></td>
+                        <td>
+                            <a href="/admin/edit/<%= user._id %>" class="btn btn-info btn-sm">
+                                Edit
+                            </a>
+                            <br><br>
+                            <form method="post" action="/admin/block/<%= user._id %>">
+                                <button type="submit" class="btn <%= user.isBlocked ? 'btn-danger btn-sm' : 'btn-warning btn-sm' %>">
+                                    <%= user.isBlocked ? 'Unblock' : 'Block' %> User
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                <% }); %>
+            <% } else { %>
+                <tr>
+                    <td colspan="5">No users found</td>
+                </tr>
+            <% } %>
+        </tbody>
+    </table>
+
+    <!-- Add User Button -->
+    <a href="/admin/createuser" class="btn btn-success">Add User</a>
+    <a href="/admin/logout" class="btn btn-danger">Logout</a>
+</div>
+
+<%- include("footer.ejs") %>
